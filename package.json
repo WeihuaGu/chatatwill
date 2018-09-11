@@ -1,0 +1,10 @@
+{
+  "name": "chat-atwill",
+  "scripts": {
+    "start": "node index"
+  },
+  "dependencies": {
+    "express": "latest",
+    "socket.io": "^2.1.1"
+  }
+}
