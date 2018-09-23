@@ -17,6 +17,7 @@ var news = io
     socket.on('getin',uinfo=>{
 	console.log('news-getin: ' + uinfo.name)
         console.log('user gender is : ' + uinfo.gender)
+	uinfo['socketid']=socket.id
         var someone
         if(uinfo.gender=="female"){
 	women.push(uinfo);
