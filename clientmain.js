@@ -7,6 +7,7 @@ $(() => {
     var $inputMessage = $('#m');
 
     var username;
+    var someonechatwith;
     var chat = io.connect('/chat');
     var news= io.connect('/news');
 
@@ -34,28 +35,36 @@ $(() => {
     }
     const eventListening = ()=>{
     chat.on('chat message', msg => {
-        $('#messages').append($('<li>').text(msg))
+        $('#messages').append($('<li>').text(msg.content))
     })
     news.on('lineinwithnomale',tip=>{
       console.log("这会儿没有男人")
       
     })    
     news.on('yourmeethuman',someone=>{
-	alert(someone.gender+":"+someone.name)
+	//alert(someone.gender+":"+someone.name)
+	console.log("遇到了"+someone.name+"他的性别是"+someone.gender)
+        someonechatwith=someone
     })
     }
 
-    $('form').submit(() => {
-      chat.emit('chat message', $('#m').val())
-      $('#m').val('')
+    const sendChatMessage=(message)=>{
+      msg={"to":someonechatwith.socketid,
+           "content":message
+          }
+      chat.emit('chat message',msg)
+    }
 
+    $('form').submit(() => {
+      sendChatMessage($('#m').val())
+      $('#m').val('')
       return false
     })
 
    $usernameInput.keypress((e) => { 
      if (e.which == 13) { 
         setUsername()
-	gotoChatPage
+	gotoChatPage()
      } 
    });
     

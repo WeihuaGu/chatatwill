@@ -40,7 +40,7 @@ var chat=io
   .on('connection',socket=>{
   socket.on('chat message', msg => {
     chat.emit('chat message',msg)
-    console.log('message: ' + msg)
+    console.log('message: to' + msg.to+','+msg.content)
   })
 })
 server.listen(4000, () => {
