@@ -40,7 +40,15 @@ $(() => {
     news.on('lineinwithnomale',tip=>{
       console.log("这会儿没有男人")
       
-    })    
+    })  
+    news.on('lineinwithnofemale',tip=>{
+      console.log("这会儿没有女人")
+      
+    })  
+    news.on('lineinwithself',tip=>{
+      console.log("除了你没有别人了")
+      
+    })         
     news.on('yourmeethuman',someone=>{
 	//alert(someone.gender+":"+someone.name)
 	console.log("遇到了"+someone.name+"他的性别是"+someone.gender)
