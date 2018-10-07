@@ -6,6 +6,9 @@ app.use(express.static(__dirname + '/'));
 app.get('/', (req, res) => {
   res.sendFile(__dirname+'/index.html')
 })
+app.get('/chat',(req,res) => {
+  res.sendFile(__dirname+'/chat.html')
+})
 const findsomeone=require('./looksomeone.js')
 
 

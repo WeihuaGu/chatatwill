@@ -1,38 +1,23 @@
 $(() => {
-    var $window=$(window);
-    var $loginPage = $('.login.page'); // The login page
+    var $window=$(window); 
     var $chatPage = $('.chat.page'); // The chatroom page
-    var $usernameInput = $('.usernameInput'); 
-    var $currentInput = $usernameInput.focus();
     var $inputMessage = $('#m');
-
+    var $currentInput = $inputMessage.focus();
     var username;
     var someonechatwith;
     var chat = io.connect('/chat');
     var news= io.connect('/news');
 
     
-    const setUsername = () => {
-      username = cleanInput($usernameInput.val().trim());
+    const getcookie= (objname)=>{//获取指定名称的cookie的值
+	var arrstr = document.cookie.split("; ");
+	for(var i = 0;i < arrstr.length;i ++){
+	    var temp = arrstr[i].split("=");
+	    if(temp[0] == objname) 
+		return unescape(temp[1]);
+	}
     }
-    const gotoChatPage=()=>{
-      if (username) {
-        // Tell the server your username
-        if($("input[name='1']:checked").val()!=undefined){
-        $loginPage.fadeOut();
-        $chatPage.show();
-        $loginPage.off('click');
-        $currentInput = $inputMessage.focus();
-        news.emit('getin', {gender:$("input[name='1']:checked").val(),name:username});
-	eventListening();
-        }
-	else
-	alert("请先选择性别");
-     }
-    }  
-    const cleanInput = (input) => {
-    return $('<div/>').text(input).html();
-    }
+    
     const eventListening = ()=>{
     chat.on('chat message', msg => {
         $('#messages').append($('<li>').text(msg.content))
@@ -63,19 +48,16 @@ $(() => {
       chat.emit('chat message',msg)
     }
 
+    eventListening();
+    
+    news.emit('getin', {gender:getcookie("pre_gender"),name:getcookie("pre_name")});
     $('form').submit(() => {
       sendChatMessage($('#m').val())
       $('#m').val('')
       return false
     })
 
-   $usernameInput.keypress((e) => { 
-     if (e.which == 13) { 
-        setUsername()
-	gotoChatPage()
-     } 
-   });
-    
+   
    $window.keydown(event => {
     // Auto-focus the current input when a key is typed
     if (!(event.ctrlKey || event.metaKey || event.altKey)) {
