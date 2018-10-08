@@ -24,14 +24,17 @@ $(() => {
     })
     news.on('lineinwithnomale',tip=>{
       console.log("这会儿没有男人")
+      M.toast({html: '这会儿没有男人!'})
       
     })  
     news.on('lineinwithnofemale',tip=>{
       console.log("这会儿没有女人")
+      M.toast({html: '这会儿没有女人'})
       
     })  
     news.on('lineinwithself',tip=>{
       console.log("除了你没有别人了")
+      M.toast({html: '这会儿找不下空闲的,和自己聊聊吧...'})
       
     })         
     news.on('yourmeethuman',someone=>{
