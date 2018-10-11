@@ -5,8 +5,9 @@ $(() => {
     var $currentInput = $inputMessage.focus();
     var username;
     var someonechatwith;
-    var chat = io.connect('/chat');
+    var pubchat = io.connect('/pubchat');
     var news= io.connect('/news');
+    var pubflag=false;
 
     
     const getcookie= (objname)=>{//获取指定名称的cookie的值
@@ -19,7 +20,7 @@ $(() => {
     }
     
     const eventListening = ()=>{
-    chat.on('chat message', msg => {
+    pubchat.on('chat message', msg => {
         $('#messages').append($('<li>').text(msg.content))
     })
     news.on('lineinwithnomale',tip=>{
@@ -40,6 +41,7 @@ $(() => {
     news.on('yourmeethuman',someone=>{
 	//alert(someone.gender+":"+someone.name)
 	console.log("遇到了"+someone.name+"他的性别是"+someone.gender)
+	M.toast({html:"你遇到了"+someone.name+"性别是"+someone.gender})
         someonechatwith=someone
     })
     }
@@ -48,7 +50,8 @@ $(() => {
       msg={"to":someonechatwith.socketid,
            "content":message
           }
-      chat.emit('chat message',msg)
+      if(pubflag==true)
+      pubchat.emit('chat message',msg)
     }
 
     eventListening();
@@ -69,5 +72,16 @@ $(() => {
     // When the client hits ENTER on their keyboard
    });    
     
-    
+   $("#pubchange").change(function() { 
+	  if($("input#pubchange").prop("checked") == true){ 
+			  // do somethig
+		  //
+		  pubflag=true;
+          }else{
+   		  pubflag=false;
+
+
+          }
+	  console.log("pubflag change"+pubflag); 
+   }); 
  })

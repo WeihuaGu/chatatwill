@@ -110,6 +110,14 @@ var chat=io
     console.log('message: to' + msg.to+','+msg.content)
   })
 })
+
+var pubchat=io
+  .of('/pubchat')
+  .on('connection',socket=>{
+    socket.on('chat message',msg =>{
+	    pubchat.emit('chat message',msg)
+    })
+}) 
 server.listen(4000, () => {
   console.log('The server is running: http://localhost:4000')
 })
