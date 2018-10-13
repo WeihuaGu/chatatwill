@@ -3,6 +3,7 @@ $(() => {
     var $chatPage = $('.chat.page'); // The chatroom page
     var $inputMessage = $('#m');
     var $currentInput = $inputMessage.focus();
+    var $chatArea = $('#messages');
     var username;
     var someonechatwith;
     var pubchat = io.connect('/pubchat');
@@ -21,7 +22,15 @@ $(() => {
     
     const eventListening = ()=>{
     pubchat.on('chat message', msg => {
+        if(pubflag)
         $('#messages').append($('<li>').text(msg.content))
+    })
+    news.on('chat message',msg=>{
+	console.log("收到来自特定用户的消息:"+msg.content)
+	if(!pubflag){
+	$chatArea.append($('<li>').text(msg.content))
+	}
+
     })
     news.on('lineinwithnomale',tip=>{
       console.log("这会儿没有男人")
@@ -40,9 +49,17 @@ $(() => {
     })         
     news.on('yourmeethuman',someone=>{
 	//alert(someone.gender+":"+someone.name)
-	console.log("遇到了"+someone.name+"他的性别是"+someone.gender)
+	console.log("遇到了"+someone.name+"他的性别是"+someone.gender+",socketid:"+someone.socketid)
 	M.toast({html:"你遇到了"+someone.name+"性别是"+someone.gender})
         someonechatwith=someone
+    })
+
+    news.on('user disconnected',socketid=>{
+	    if(someonechatwith.socketid=socketid){
+		console.log("对面下线,请等待新用户匹配")
+		    M.toast({html: "对面下线,请等待新用户匹配"})
+		news.emit('opponent gone away')
+	    }
     })
     }
 
@@ -53,10 +70,19 @@ $(() => {
       pubchat.emit('chat message',msg)
       }
       else{
-      msg={"to":someonechatwith.socketid,
+      if(someonechatwith['socketid']){ 
+      msg={"to":someonechatwith['socketid'],
            "content":message
           }
+      news.emit('push chat message',msg)
+      $chatArea.append($('<li>').text(msg.content))
+      console.log("push chat message to:"+msg.to)
       }
+      }
+    }
+
+    const cleanChatArea=()=>{
+      $chatArea.find('li').remove();
     }
 
     eventListening();
@@ -88,5 +114,6 @@ $(() => {
 
           }
 	  console.log("pubflag change"+pubflag); 
+	  cleanChatArea();
    }); 
  })

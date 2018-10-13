@@ -17,7 +17,6 @@ var women=[]
 const filtWait=(list)=>{
   var filted = [];
   for(i =0;i<list.length;i++){
-		console.log(list[i].name);
 		if(list[i]['chatstatus']=="wait")
 		  filted.push(list[i]);
 	}
@@ -36,6 +35,23 @@ const userGetin={
 	return someone;
 	}
   };
+const delUser=(socketid)=>{
+    for(i =0;i<men.length;i++){
+	        var menitem=men[i]
+	        if(!menitem.socketid)
+		continue
+                if(menitem.socketid==socketid)
+                  men.splice(i,1)
+        }
+
+	for(j =0;j<women.length;j++){
+		var womenitem=women[i]
+		if(!womenitem.socketid)
+		continue
+                if(womenitem.socketid==socketid)
+			women.splice(j,1)
+        }
+}
 const updateChatStatus={
     "female":function(user,status){
 	var index=women.indexOf(user)
@@ -92,7 +108,7 @@ var news = io
   .of('/news')
   .on('connection', function (socket) {
     socket.on('getin',uinfo=>{
-	console.log('news:user-get-in:' + uinfo.name+' and gender is '+uinfo.gender)
+	console.log('news:(user get in:' + uinfo.name+' and gender is '+uinfo.gender+')')
 	uinfo['socketid']=socket.id
 	uinfo['chatstatus']="wait"
         var someone
@@ -100,16 +116,25 @@ var news = io
 	meetTypenews[meetType(uinfo,someone)](news,uinfo,someone)
 
     })
+    socket.on('push chat message',msg=>{
+    console.log("receive (push message)->"+msg.to)
+    if(msg.to){
+      news.to(msg.to).emit('chat message',msg)
+    }
+
+    })
+ 
+    socket.on('opponent gone away',()=>{
+
+    })
+    socket.on('disconnect', function () {
+      news.emit('user disconnected',socket.id)
+      delUser(socket.id)
+      console.log('id:'+socket.id+'disconnected')
+     })
+    
   });
 
-var chat=io
-  .of('/chat')
-  .on('connection',socket=>{
-  socket.on('chat message', msg => {
-    chat.emit('chat message',msg)
-    console.log('message: to' + msg.to+','+msg.content)
-  })
-})
 
 var pubchat=io
   .of('/pubchat')
