@@ -47,11 +47,16 @@ $(() => {
     }
 
     const sendChatMessage=(message)=>{
+      
+      if(pubflag==true){
+      msg={"content":message}
+      pubchat.emit('chat message',msg)
+      }
+      else{
       msg={"to":someonechatwith.socketid,
            "content":message
           }
-      if(pubflag==true)
-      pubchat.emit('chat message',msg)
+      }
     }
 
     eventListening();
