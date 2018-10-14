@@ -4,13 +4,14 @@ $(() => {
     var $inputMessage = $('#m');
     var $currentInput = $inputMessage.focus();
     var $chatArea = $('#messages');
-    var username;
+    var $waitanim = $('#waitanimation');
+    var userself;
     var someonechatwith;
     var pubchat = io.connect('/pubchat');
     var news= io.connect('/news');
     var pubflag=false;
 
-    
+    ///////////////////////////////////////////////////////    
     const getcookie= (objname)=>{//获取指定名称的cookie的值
 	var arrstr = document.cookie.split("; ");
 	for(var i = 0;i < arrstr.length;i ++){
@@ -19,7 +20,6 @@ $(() => {
 		return unescape(temp[1]);
 	}
     }
-    
     const eventListening = ()=>{
     pubchat.on('chat message', msg => {
         if(pubflag)
@@ -51,14 +51,16 @@ $(() => {
 	//alert(someone.gender+":"+someone.name)
 	console.log("遇到了"+someone.name+"他的性别是"+someone.gender+",socketid:"+someone.socketid)
 	M.toast({html:"你遇到了"+someone.name+"性别是"+someone.gender})
+	$waitanim.fadeOut()
         someonechatwith=someone
     })
 
     news.on('user disconnected',socketid=>{
 	    if(someonechatwith.socketid=socketid){
 		console.log("对面下线,请等待新用户匹配")
-		    M.toast({html: "对面下线,请等待新用户匹配"})
-		news.emit('opponent gone away')
+		M.toast({html: "对面下线,请等待新用户匹配"})
+		news.emit('opponent gone away',userself)
+		$waitanim.fadeIn()
 	    }
     })
     }
@@ -84,10 +86,10 @@ $(() => {
     const cleanChatArea=()=>{
       $chatArea.find('li').remove();
     }
-
+    ///////////////////////////////////////////////////////////////
     eventListening();
-    
-    news.emit('getin', {gender:getcookie("pre_gender"),name:getcookie("pre_name")});
+    userself = {gender:getcookie("pre_gender"),name:getcookie("pre_name")}    
+    news.emit('getin', userself);
     $('form').submit(() => {
       sendChatMessage($('#m').val())
       $('#m').val('')
@@ -108,6 +110,7 @@ $(() => {
 			  // do somethig
 		  //
 		  pubflag=true;
+		  $waitanim.fadeOut();
           }else{
    		  pubflag=false;
 

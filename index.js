@@ -38,7 +38,7 @@ const userGetin={
 const delUser=(socketid)=>{
     for(i =0;i<men.length;i++){
 	        var menitem=men[i]
-	        if(!menitem.socketid)
+	        if(menitem==undefined)
 		continue
                 if(menitem.socketid==socketid)
                   men.splice(i,1)
@@ -46,7 +46,7 @@ const delUser=(socketid)=>{
 
 	for(j =0;j<women.length;j++){
 		var womenitem=women[i]
-		if(!womenitem.socketid)
+		if(womenitem==undefined)
 		continue
                 if(womenitem.socketid==socketid)
 			women.splice(j,1)
@@ -66,6 +66,7 @@ const updateChatStatus={
 
     }
  };
+
 const meetType=(uinfo,someone)=>{
 	if(uinfo.gender!=someone.gender)
 	return "common"
@@ -124,13 +125,33 @@ var news = io
 
     })
  
-    socket.on('opponent gone away',()=>{
+    socket.on('opponent gone away',(userself)=>{
+    if(userself==undefined)
+    return
+      if(userself.gender=="female"){
+	      for(var i=0;i<women.length;i++){
+		      if(women[i]==undefined)
+			   continue
+		      if(women[i].name==userself.name&&women[i].socketid==socket.id)
+			   women[i]['chatstatus']="wait"
+	      }
+      }else{
+	      for(var j=0;j<men.length;j++){
+                      if(men[j]==undefined)
+                           continue
+                      if(men[j].name==userself.name&&men[j].socketid==socket.id)
+                           men[j]['chatstatus']="wait"
+              }
+
+
+      }
+    
 
     })
     socket.on('disconnect', function () {
       news.emit('user disconnected',socket.id)
       delUser(socket.id)
-      console.log('id:'+socket.id+'disconnected')
+      console.log('id:'+socket.id+',disconnected')
      })
     
   });
