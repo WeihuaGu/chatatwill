@@ -53,8 +53,11 @@ $(() => {
 	M.toast({html:"你遇到了"+someone.name+"性别是"+someone.gender})
 	$waitanim.fadeOut()
         someonechatwith=someone
+	cleanChatArea();
     })
-
+    news.on('update userself',updateduserself=>{
+	    userself=updateduserself
+    })
     news.on('user disconnected',socketid=>{
 	    if(someonechatwith.socketid=socketid){
 		console.log("对面下线,请等待新用户匹配")
@@ -63,6 +66,15 @@ $(() => {
 		$waitanim.fadeIn()
 	    }
     })
+
+    news.on('show user list',userlist=>{
+	    console.log("男的列表//////////////")
+	    console.log(userlist['menlist'])
+	    console.log("女的列表/////////////")
+	    console.log(userlist['womenlist'])
+	    console.log("--------------------")
+    })
+
     }
 
     const sendChatMessage=(message)=>{

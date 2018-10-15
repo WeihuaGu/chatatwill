@@ -14,6 +14,37 @@ app.get('/chat',(req,res) => {
 
 var men = []
 var women=[]
+
+const showUserList=()=>{
+      var menstr=""
+      for(let menitem of men){
+	     menstr=menstr+"("+menitem.name+","+menitem.chatstatus+") "
+      }
+      var womenstr=""
+      for(let womenitem of women){
+	     womenstr=womenstr+"("+womenitem.name+","+womenitem.chatstatus+") "
+      }
+      return {"menlist":menstr,"womenlist":womenstr} 
+
+}
+
+const findItemByMayOutdated=(user)=>{
+      var gender=user.gender
+      var useritem;
+      if(gender=="female"){
+	 for(let itemfemale of women){
+		if(itemfemale.name==user.name&&itemfemale.socketid==user.socketid)
+		useritem=itemfemale
+         }
+      }else{
+	  for(let itemmale of men){
+		if(itemmale.name==user.name&&itemmale.socketid==user.socketid)
+		useritem=itemmale
+         }
+      }
+      return useritem;
+}
+
 const filtWait=(list)=>{
   var filted = [];
   for(i =0;i<list.length;i++){
@@ -35,6 +66,26 @@ const userGetin={
 	return someone;
 	}
   };
+
+const findSomeoneForMatchAgain={
+    "female":function(uinfo){
+        var someone=findsomeone.find(uinfo,filtWait(women),filtWait(men));
+        return someone;
+        },
+    "male":function(uinfo){
+        var someone=findsomeone.find(uinfo,filtWait(men),filtWait(women));
+        return someone;
+        }
+}
+
+const matchAgain=(usermayoutdated)=>{
+	var user=findItemByMayOutdated(usermayoutdated)
+	if(user==undefined)
+		return
+        var someone=findSomeoneForMatchAgain[user.gender](user);
+        meetTypenews[meetType(user,someone)](news,user,someone)
+	
+    }
 const delUser=(socketid)=>{
     for(i =0;i<men.length;i++){
 	        var menitem=men[i]
@@ -115,7 +166,7 @@ var news = io
         var someone
         someone=userGetin[uinfo.gender](uinfo);
 	meetTypenews[meetType(uinfo,someone)](news,uinfo,someone)
-
+	news.to(uinfo['socketid']).emit('update userself',uinfo)
     })
     socket.on('push chat message',msg=>{
     console.log("receive (push message)->"+msg.to)
@@ -145,14 +196,18 @@ var news = io
 
 
       }
+      matchAgain(userself)
     
 
     })
+    
     socket.on('disconnect', function () {
       news.emit('user disconnected',socket.id)
+      news.emit('show user list',showUserList())
       delUser(socket.id)
       console.log('id:'+socket.id+',disconnected')
      })
+    
     
   });
 
