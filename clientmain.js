@@ -10,6 +10,7 @@ $(() => {
     var pubchat = io.connect('/pubchat');
     var news= io.connect('/news');
     var pubflag=false;
+    var onlyslefflag=true;
 
     ///////////////////////////////////////////////////////    
     const getcookie= (objname)=>{//获取指定名称的cookie的值
@@ -26,16 +27,16 @@ $(() => {
         $('#messages').append($('<li>').text(msg.content))
     })
     news.on('chat message',msg=>{
-	console.log("收到来自特定用户的消息:"+msg.content)
+	console.log("收到来自特定用户("+someonechatwith.name+")的消息:"+msg.content)
 	if(!pubflag){
-	$chatArea.append($('<li>').text(msg.content))
+	$chatArea.append($('<li>').text(someonechatwith.name+":"+msg.content))
 	}
 
     })
     news.on('lineinwithnomale',tip=>{
       console.log("这会儿没有男人")
       M.toast({html: '这会儿没有男人!'})
-      
+      onlyslefflag=true      
     })  
     news.on('lineinwithnofemale',tip=>{
       console.log("这会儿没有女人")
@@ -52,6 +53,7 @@ $(() => {
 	console.log("遇到了"+someone.name+"他的性别是"+someone.gender+",socketid:"+someone.socketid)
 	M.toast({html:"你遇到了"+someone.name+"性别是"+someone.gender})
 	$waitanim.fadeOut()
+	onlyslefflag=false
         someonechatwith=someone
 	cleanChatArea();
     })
@@ -78,6 +80,10 @@ $(() => {
     }
 
     const sendChatMessage=(message)=>{
+      if(onlyslefflag){
+	     $chatArea.append($('<li>').text("自己跟自己聊,很~:"+$('#m').val()))
+	     return
+      }
       
       if(pubflag==true){
       msg={"content":message}
@@ -89,7 +95,7 @@ $(() => {
            "content":message
           }
       news.emit('push chat message',msg)
-      $chatArea.append($('<li>').text(msg.content))
+      $chatArea.append($('<li>').text("me:"+msg.content))
       console.log("push chat message to:"+msg.to)
       }
       }

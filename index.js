@@ -87,20 +87,22 @@ const matchAgain=(usermayoutdated)=>{
 	
     }
 const delUser=(socketid)=>{
-    for(i =0;i<men.length;i++){
-	        var menitem=men[i]
+    for(let menitem of men){
 	        if(menitem==undefined)
 		continue
-                if(menitem.socketid==socketid)
+                if(menitem.socketid==socketid){
+		  var i=men.indexOf(menitem)
                   men.splice(i,1)
+		}
         }
 
-	for(j =0;j<women.length;j++){
-		var womenitem=women[i]
+    for(let womenitem of women){
 		if(womenitem==undefined)
 		continue
-                if(womenitem.socketid==socketid)
+                if(womenitem.socketid==socketid){
+			var j=women.indexOf(womenitem)
 			women.splice(j,1)
+		}
         }
 }
 const updateChatStatus={
@@ -180,18 +182,14 @@ var news = io
     if(userself==undefined)
     return
       if(userself.gender=="female"){
-	      for(var i=0;i<women.length;i++){
-		      if(women[i]==undefined)
-			   continue
-		      if(women[i].name==userself.name&&women[i].socketid==socket.id)
-			   women[i]['chatstatus']="wait"
+	      for(let womenitem of women){
+		      if(womenitem.name==userself.name&&womenitem.socketid==socket.id)
+			   womenitem['chatstatus']="wait"
 	      }
       }else{
-	      for(var j=0;j<men.length;j++){
-                      if(men[j]==undefined)
-                           continue
-                      if(men[j].name==userself.name&&men[j].socketid==socket.id)
-                           men[j]['chatstatus']="wait"
+	      for(let menitem of men){
+                      if(menitem.name==userself.name&&menitem.socketid==socket.id)
+                           menitem['chatstatus']="wait"
               }
 
 
@@ -203,8 +201,8 @@ var news = io
     
     socket.on('disconnect', function () {
       news.emit('user disconnected',socket.id)
-      news.emit('show user list',showUserList())
       delUser(socket.id)
+      news.emit('show user list',showUserList())
       console.log('id:'+socket.id+',disconnected')
      })
     
