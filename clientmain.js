@@ -5,6 +5,8 @@ $(() => {
     var $currentInput = $inputMessage.focus();
     var $chatArea = $('#messages');
     var $waitanim = $('#waitanimation');
+    var $changehumanbutton=$('#changehuman')
+    var $quitrefresh=$('#quitrefresh')
     var userself;
     var someonechatwith;
     var pubchat = io.connect('/pubchat');
@@ -20,6 +22,17 @@ $(() => {
 	    if(temp[0] == objname) 
 		return unescape(temp[1]);
 	}
+    }
+    const changeHuman=()=>{
+	
+	onlyslefflag=true
+	news.emit('change human',userself)
+	$waitanim.fadeIn()
+	M.toast({html: '开始重新匹配,请耐心等待...'})
+
+    }
+    const quitRefresh=()=>{
+	    window.location.href = "/";
     }
     const eventListening = ()=>{
     pubchat.on('chat message', msg => {
@@ -108,6 +121,12 @@ $(() => {
     }
     ///////////////////////////////////////////////////////////////
     eventListening();
+    $changehumanbutton.click(()=>{
+	    changeHuman()
+    });
+    $quitrefresh.click(function(){ 
+      quitRefresh()
+    });  
     userself = {gender:getcookie("pre_gender"),name:getcookie("pre_name")}    
     news.emit('getin', userself);
     $('form').submit(() => {

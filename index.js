@@ -120,6 +120,23 @@ const updateChatStatus={
     }
  };
 
+const updateChatStatusBySocketid={
+    "female":function(name,socketid,status){
+	 for(let womenitem of women){
+		      if(womenitem.name==name&&womenitem.socketid==socketid)
+			   womenitem['chatstatus']=status
+	    }
+
+    },
+    "male":function(name,socketid,status){
+	for(let menitem of men){
+                      if(menitem.name==name&&menitem.socketid==socketid)
+                           menitem['chatstatus']=status
+              }
+
+    }
+ };
+
 const meetType=(uinfo,someone)=>{
 	if(uinfo.gender!=someone.gender)
 	return "common"
@@ -204,6 +221,13 @@ var news = io
       delUser(socket.id)
       news.emit('show user list',showUserList())
       console.log('id:'+socket.id+',disconnected')
+     })
+    socket.on('change human',(resuser)=>{
+      news.emit('user disconnected',socket.id)
+      updateChatStatusBySocketid[resuser.gender](resuser.name,socket.id,"wait")
+      matchAgain(resuser)
+      news.emit('show user list',showUserList())
+      console.log('id:'+socket.id+',change human')
      })
     
     
