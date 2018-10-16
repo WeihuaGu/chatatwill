@@ -61,6 +61,8 @@ $(() => {
 	    userself=updateduserself
     })
     news.on('user disconnected',socketid=>{
+	    if(onlyslefflag)
+		    return 
 	    if(someonechatwith.socketid=socketid){
 		console.log("对面下线,请等待新用户匹配")
 		M.toast({html: "对面下线,请等待新用户匹配"})
