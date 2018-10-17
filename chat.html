@@ -1,39 +1,49 @@
+<html>
+<head>
+  <title>陌生人聊天</title>
 <style>
-  form { padding: 10px; position: fixed; bottom: 0; width:100%}
+  div.row div#waitanimation { padding: 1px;left: 2
+  form { padding: 10px; position: fixed; bottom: 0;width:100%}
   #plusbutton { padding: 10px; position: fixed; right: 0; top: 0; }
   #messages { list-style-type: none; margin: 0; padding: 0; }
   #messages li { padding: 5px 10px; }
   #messages li:nth-child(odd) { background: #eee; }
 </style>
-<div class="chat page">
-<ul id="messages"></ul>
+</head>
+<body>
+<div class="row">   
+      <div id="waitanimation" class="col s12 l7 progress white">
+        <div class="indeterminate black"></div>
+      </div> 
+      <div class="col s12 l5"></div>
+</div>
+
+<div class="row">
+<div class="col l1 s12"></div>	
+<div class="chat page col l12 s12">
+<div id="messagesdiv"> <ul id="messages" class=""></ul> <div>
 
 <form action="">
-	<input id="m" autocomplete="off" /><button class="btn">发送</button>
-	<form action="#">
-          </br>		          <label>
+	<input id="m"  autocomplete="off" />
+	<button class="btn black">发送</button>
+	  <form action="#">
+          </br>		     
+		<label>
 				          <input type="checkbox" id="pubchange"/>
 					          <span>切换到公共聊天</span>
-						        </label>
+		</label>
+         </form>
 </form>
 
+
 </div>
 
-<div id="waitanimation" class="preloader-wrapper active">
-    <div class="spinner-layer spinner-red-only">
-      <div class="circle-clipper left">
-        <div class="circle"></div>
-      </div><div class="gap-patch">
-        <div class="circle"></div>
-      </div><div class="circle-clipper right">
-        <div class="circle"></div>
-      </div>
-    </div>
 </div>
+
 
 
 <div class="fixed-action-btn" id="plusbutton">
-  <a class="btn-floating btn-large red">
+  <a class="btn-floating btn black">
     <i class="large material-icons">close</i>
   </a>
   <ul>
@@ -42,6 +52,7 @@
   </ul>
 </div>
 <script>
+
 document.addEventListener('DOMContentLoaded', function() {
     var floatelems = document.querySelectorAll('.fixed-action-btn');
     var floatinstances = M.FloatingActionButton.init(floatelems, {
@@ -59,3 +70,5 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script src="clientmain.js"></script>
+</body>
+</html>

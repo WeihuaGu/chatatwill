@@ -1,3 +1,8 @@
+/**
+ *
+ * socketio client main js
+ */
+
 $(() => {
     var $window=$(window); 
     var $chatPage = $('.chat.page'); // The chatroom page
