@@ -31,6 +31,7 @@ $(() => {
     const changeHuman=()=>{
 	
 	onlyslefflag=true
+	someonechatwith=undefined
 	news.emit('change human',userself)
 	$waitanim.fadeIn()
 	M.toast({html: '开始重新匹配,请耐心等待...'})
@@ -92,6 +93,7 @@ $(() => {
 	    if(someonechatwith.socketid=socketid){
 		console.log("对面下线,请等待新用户匹配")
 		M.toast({html: "对面下线,请等待新用户匹配"})
+		someonechatwith=undefined
 		news.emit('opponent gone away',userself)
 		$waitanim.fadeIn()
 	    }
@@ -162,10 +164,12 @@ $(() => {
 			  // do somethig
 		  //
 		  pubflag=true;
+		  news.emit('switch pub',userself);
 		  $waitanim.fadeOut();
+
           }else{
    		  pubflag=false;
-
+                  changeHuman();
 
           }
 	  console.log("pubflag change"+pubflag); 

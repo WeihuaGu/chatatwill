@@ -229,6 +229,10 @@ var news = io
       news.emit('show user list',showUserList())
       console.log('id:'+socket.id+',change human')
      })
+    socket.on('switch pub',(userself)=>{
+	    updateChatStatusBySocketid[userself.gender](userself.name,socket.id,"pub")
+	    news.emit('user disconnected',socket.id)
+    })
     
     
   });
