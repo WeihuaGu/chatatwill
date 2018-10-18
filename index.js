@@ -47,9 +47,9 @@ const findItemByMayOutdated=(user)=>{
 
 const filtWait=(list)=>{
   var filted = [];
-  for(i =0;i<list.length;i++){
-		if(list[i]['chatstatus']=="wait")
-		  filted.push(list[i]);
+  for(let listitem of list){
+		if(listitem['chatstatus']=="wait")
+		  filted.push(listitem);
 	}
   return filted;
 
