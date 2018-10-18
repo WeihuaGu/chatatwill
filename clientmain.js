@@ -39,6 +39,14 @@ $(() => {
     const quitRefresh=()=>{
 	    window.location.href = "/";
     }
+    const addToChatArea=(msg,pos="left")=>{
+	  if(pos=="right")
+	  $chatArea.append($('<li class="card white-text blue-grey darken-1">').text(msg))
+          else
+          $chatArea.append($('<li class="card">').text(msg))
+	  slt1()
+
+    }
     const eventListening = ()=>{
     pubchat.on('chat message', msg => {
         if(pubflag)
@@ -47,7 +55,7 @@ $(() => {
     news.on('chat message',msg=>{
 	console.log("收到来自特定用户("+someonechatwith.name+")的消息:"+msg.content)
 	if(!pubflag){
-	$chatArea.append($('<li>').text(someonechatwith.name+":"+msg.content))
+	addToChatArea(someonechatwith.name+":"+msg.content,"right")
 	}
 
     })
@@ -101,7 +109,7 @@ $(() => {
 
     const sendChatMessage=(message)=>{
       if(onlyslefflag){
-	     $chatArea.append($('<li>').text("自己跟自己聊,很~:"+$('#m').val()))
+	     addToChatArea("自己跟自己聊,很~:"+$('#m').val())
 	     return
       }
       
@@ -115,7 +123,7 @@ $(() => {
            "content":message
           }
       news.emit('push chat message',msg)
-      $chatArea.append($('<li>').text("me:"+msg.content))
+      addToChatArea("me:"+msg.content)
       console.log("push chat message to:"+msg.to)
       }
       }

@@ -2,8 +2,8 @@
 <head>
   <title>陌生人聊天</title>
 <style>
-  div.row div#waitanimation { padding: 1px;left: 2
-  form { padding: 10px; position: fixed; bottom: 0;width:100%}
+  div.row div#waitanimation { padding: 1px;position: fixed; top: 0 ;left: 2}
+  form { padding: 10px; width:100%;position: fixed; bottom: 0;}
   #plusbutton { padding: 10px; position: fixed; right: 0; top: 0; }
   #messages { list-style-type: none; margin: 0; padding: 0; }
   #messages li { padding: 5px 10px; }
@@ -39,8 +39,12 @@
 </div>
 
 </div>
-
-
+</br>
+</br>
+</br>
+</br>
+</br>
+<a id="end" name="end" ></a> 
 
 <div class="fixed-action-btn" id="plusbutton">
   <a class="btn-floating btn black">
@@ -52,7 +56,10 @@
   </ul>
 </div>
 <script>
-
+function slt1()
+{
+    document.getElementById("end").scrollIntoView();
+} 
 document.addEventListener('DOMContentLoaded', function() {
     var floatelems = document.querySelectorAll('.fixed-action-btn');
     var floatinstances = M.FloatingActionButton.init(floatelems, {
