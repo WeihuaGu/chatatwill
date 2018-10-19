@@ -7,4 +7,5 @@
 ![](截图/twostep.jpg) 
 ### 调试及查看
 node index运行
+
 服务器看终端log,浏览器客户端看控制台
