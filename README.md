@@ -1,7 +1,7 @@
 # chatatwill
  用socketio写的陌生人聊天的网站
  
-###截图
+### 截图
 ![](截图/onestep.jpg)
 ---
 ![](截图/twostep.jpg) 
